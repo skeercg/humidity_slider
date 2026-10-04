@@ -160,10 +160,10 @@ class PercentageSliderPainter extends CustomPainter {
     const delimiterGapWidth = 8;
 
     for (ui.PathMetric pathMetric in sliderPath.computeMetrics()) {
-      final step = pathMetric.length.ceil() / 99;
+      final step = pathMetric.length / 100;
 
-      for (double t = 0.0, i = 1; t <= pathMetric.length; t += step, i++) {
-        ui.Tangent? tangent = pathMetric.getTangentForOffset(t);
+      for (int i = 0; i <= 100; i++) {
+        ui.Tangent? tangent = pathMetric.getTangentForOffset(i * step);
         if (tangent != null) {
           final position = tangent.position;
           Offset p1 = Offset(position.dx - delimiterGapWidth, position.dy);
