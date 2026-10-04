@@ -1,5 +1,6 @@
+
 # Humidity Slider
 
-<img src="https://github.com/user-attachments/assets/33f56e66-9d31-471a-bf16-15112bb729ba" width="400">
+<img src="https://github.com/user-attachments/assets/5e8df80e-e4cc-43e8-ad16-7c7427ba1030" width="400" />
 
 
