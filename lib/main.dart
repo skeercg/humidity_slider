@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:core';
 
@@ -18,7 +17,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int _value = 1;
 
-  void _onChanged(int value) {
+  void _onChangeEnd(int value) {
     setState(() => _value = value);
   }
 
@@ -33,7 +32,7 @@ class _AppState extends State<App> {
             children: [
               PercentageSlider(
                 initialValue: _value,
-                onChanged: _onChanged,
+                onChangeEnd: _onChangeEnd,
               ),
               Display(value: _value),
             ],
@@ -48,11 +47,11 @@ class PercentageSlider extends StatefulWidget {
   const PercentageSlider({
     super.key,
     required this.initialValue,
-    required this.onChanged,
+    required this.onChangeEnd,
   });
 
   final int initialValue;
-  final void Function(int) onChanged;
+  final void Function(int) onChangeEnd;
 
   @override
   State<PercentageSlider> createState() => _PercentageSliderState();
@@ -78,9 +77,8 @@ class _PercentageSliderState extends State<PercentageSlider> {
         }
 
         setState(() => _value = curValue);
-
-        widget.onChanged?.call(_value);
       },
+      onVerticalDragEnd: (_) => widget.onChangeEnd(_value),
       child: CustomPaint(
         size: const Size(300, 600),
         painter: PercentageSliderPainter(value: _value),
