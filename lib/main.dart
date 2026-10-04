@@ -5,33 +5,67 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
+  runApp(App());
+}
+
+class App extends StatefulWidget {
+  const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  int _value = 1;
+
+  void _onChanged(int value) {
+    setState(() => _value = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.indigo.shade900,
-        body: const Center(
+        body: Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PercentageSlider(),
-              Countdown(),
+              PercentageSlider(
+                initialValue: _value,
+                onChanged: _onChanged,
+              ),
+              Countdown(value: _value),
             ],
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class PercentageSlider extends StatefulWidget {
-  const PercentageSlider({super.key});
+  const PercentageSlider({
+    super.key,
+    required this.initialValue,
+    required this.onChanged,
+  });
+
+  final int initialValue;
+  final void Function(int) onChanged;
 
   @override
   State<PercentageSlider> createState() => _PercentageSliderState();
 }
 
 class _PercentageSliderState extends State<PercentageSlider> {
-  int _value = 50;
+  int _value = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +78,8 @@ class _PercentageSliderState extends State<PercentageSlider> {
         }
 
         setState(() => _value = curValue);
+
+        widget.onChanged?.call(_value);
       },
       child: CustomPaint(
         size: const Size(300, 600),
@@ -146,13 +182,13 @@ class PercentageSliderPainter extends CustomPainter {
           if (i % 10 == 0 || i == value) {
             TextStyle percentageTextStyle = switch (i == value) {
               true => const TextStyle(
-                color: Colors.blue,
-                fontSize: 18,
-              ),
+                  color: Colors.blue,
+                  fontSize: 18,
+                ),
               false => const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
             };
 
             if (i != value && (-4 <= i - value && i - value <= 5)) {
@@ -226,23 +262,10 @@ class PercentageSliderPainter extends CustomPainter {
   }
 }
 
-class Countdown extends StatefulWidget {
-  const Countdown({super.key});
+class Countdown extends StatelessWidget {
+  const Countdown({super.key, required this.value});
 
-  @override
-  State<Countdown> createState() => _CountdownState();
-}
-
-class _CountdownState extends State<Countdown> {
-  int _counter = 99;
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() => _counter--);
-    });
-  }
+  final int value;
 
   @override
   Widget build(BuildContext context) {
@@ -261,9 +284,9 @@ class _CountdownState extends State<Countdown> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...(_counter.abs()).toString().split('').map(
+            ...(value.abs()).toString().split('').map(
                   (d) => CountdownDigit(value: int.parse(d)),
-            ),
+                ),
             const Text(
               '%',
               style: TextStyle(
