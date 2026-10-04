@@ -26,7 +26,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.indigo.shade900,
+        backgroundColor: Colors.black,
         body: Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
