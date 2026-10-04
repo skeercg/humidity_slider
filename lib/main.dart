@@ -35,7 +35,7 @@ class _AppState extends State<App> {
                 initialValue: _value,
                 onChanged: _onChanged,
               ),
-              Countdown(value: _value),
+              Display(value: _value),
             ],
           ),
         ),
@@ -262,8 +262,8 @@ class PercentageSliderPainter extends CustomPainter {
   }
 }
 
-class Countdown extends StatelessWidget {
-  const Countdown({super.key, required this.value});
+class Display extends StatelessWidget {
+  const Display({super.key, required this.value});
 
   final int value;
 
@@ -285,7 +285,7 @@ class Countdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ...(value.abs()).toString().split('').map(
-                  (d) => CountdownDigit(value: int.parse(d)),
+                  (d) => DisplayDigit(value: int.parse(d)),
                 ),
             const Text(
               '%',
@@ -301,8 +301,8 @@ class Countdown extends StatelessWidget {
   }
 }
 
-class CountdownDigit extends StatelessWidget {
-  const CountdownDigit({
+class DisplayDigit extends StatelessWidget {
+  const DisplayDigit({
     super.key,
     required this.value,
     this.previousValue,
