@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'dart:core';
 
@@ -34,7 +35,10 @@ class _AppState extends State<App> {
                 initialValue: _value,
                 onChangeEnd: _onChangeEnd,
               ),
-              Display(value: _value),
+              SizedBox(
+                width: 200,
+                child: Display(value: _value),
+              ),
             ],
           ),
         ),
@@ -119,32 +123,28 @@ class PercentageSliderPainter extends CustomPainter {
     const bezierYLength = 60;
     const bezierXLength = 30;
 
-    final sliderPath = Path()
-      ..moveTo(size.width / 2, 0)
-      ..lineTo(
-        size.width / 2,
-        size.height * value / 100 - bezierYLength,
-      )
-      ..cubicTo(
-        size.width / 2,
-        size.height * value / 100 - bezierYLength / 2,
-        size.width / 2 - bezierXLength,
-        size.height * value / 100 - bezierYLength / 2,
-        size.width / 2 - bezierXLength,
-        size.height * value / 100,
-      )
-      ..cubicTo(
-        size.width / 2 - bezierXLength,
-        size.height * value / 100 + bezierYLength / 2,
-        size.width / 2,
-        size.height * value / 100 + bezierYLength / 2,
-        size.width / 2,
-        size.height * value / 100 + bezierYLength,
-      )
-      ..lineTo(
-        size.width / 2,
-        size.height,
-      );
+    double bumpX(double dy) {
+      if (dy.abs() >= bezierYLength) return 0;
+      return bezierXLength * (1 + math.cos(math.pi * dy / bezierYLength)) / 2;
+    }
+
+    final cx = size.width / 2;
+    final y = size.height * value / 100;
+
+    final bumpTop = math.max(0.0, y - bezierYLength);
+    final bumpBottom = math.min(size.height, y + bezierYLength);
+
+    final sliderPath = Path()..moveTo(cx - bumpX(-y), 0);
+
+    for (var py = bumpTop; py < bumpBottom; py++) {
+      sliderPath.lineTo(cx - bumpX(py - y), py);
+    }
+
+    sliderPath.lineTo(cx - bumpX(bumpBottom - y), bumpBottom);
+
+    if (bumpBottom < size.height) {
+      sliderPath.lineTo(cx, size.height);
+    }
 
     canvas.drawPath(sliderPath, sliderPaint);
 
