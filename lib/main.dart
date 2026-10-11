@@ -66,74 +66,27 @@ class Display extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...(value.abs()).toString().split('').map(
-                  (d) => DisplayDigit(value: int.parse(d)),
-                ),
-            const Text(
-              '%',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 64,
-              ),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          switchInCurve: const Interval(0.5, 1),
+          switchOutCurve: const Interval(0.5, 1),
+          layoutBuilder: (currentChild, previousChildren) => Stack(
+            alignment: AlignmentDirectional.centerStart,
+            children: [
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          ),
+          child: Text(
+            '$value%',
+            key: ValueKey(value),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 64,
             ),
-          ],
+          ),
         ),
       ],
-    );
-  }
-}
-
-class DisplayDigit extends StatelessWidget {
-  const DisplayDigit({
-    super.key,
-    required this.value,
-    this.previousValue,
-  });
-
-  final int value;
-  final int? previousValue;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 900),
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeOut,
-      transitionBuilder: (child, animation) {
-        if (child.key == ValueKey(value)) {
-          final slideIn = Tween<Offset>(
-            begin: const Offset(0, 1),
-            end: const Offset(0, 0),
-          ).animate(animation);
-
-          return SlideTransition(
-            position: slideIn,
-            child: FadeTransition(opacity: animation, child: child),
-          );
-        } else {
-          final slideOut = Tween<Offset>(
-            begin: const Offset(0, -1),
-            end: const Offset(0, 0),
-          ).animate(animation);
-
-          return SlideTransition(
-            position: slideOut,
-            child: FadeTransition(opacity: animation, child: child),
-          );
-        }
-      },
-      child: Text(
-        '$value',
-        key: ValueKey<int>(value),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 64,
-        ),
-      ),
     );
   }
 }
