@@ -197,8 +197,7 @@ class _RenderCustomSlider extends RenderShiftedBox {
         ..shader = ui.Gradient.linear(
           track.topCenter,
           track.bottomCenter,
-          [Colors.red, Colors.blue, Colors.red],
-          [0.25, 0.45, 1.0],
+          [Colors.blue.shade100, Colors.blue.shade700],
         ),
     );
   }
